@@ -1,0 +1,9 @@
+[project]
+name = "projet-detection-fraude"
+version = "0.1.0"
+description = "Détection de fraude dans les transactions Mobile Money (Machine Learning)"
+requires-python = ">=3.10"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["."]
