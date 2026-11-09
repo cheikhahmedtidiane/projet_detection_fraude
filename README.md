@@ -50,11 +50,17 @@ python -m venv .venv
 pip install -r requirements.txt
 ```
 
+Lancer les tests :
+
+```bash
+pytest
+```
+
 ## Feuille de route
 
 - [x] Initialisation du projet
 - [x] Cadrage du problème et hypothèses → [reports/01_cadrage.md](reports/01_cadrage.md)
-- [ ] Chargement et qualité des données
+- [x] Chargement et qualité des données → [notebooks/01_chargement_qualite.ipynb](notebooks/01_chargement_qualite.ipynb)
 - [ ] Analyse exploratoire et tests statistiques
 - [ ] Protocole expérimental (split temporel)
 - [ ] Feature engineering
