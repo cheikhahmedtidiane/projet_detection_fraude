@@ -44,3 +44,14 @@ VAL_LAST_DAY = 14  # validation : jours 13 à 14
 TEST_LAST_DAY = 16  # test : jours 15 à 16
 # drift : jours 17 et suivants (régime d'activité anormal du simulateur)
 SPLIT_NAMES = ["train", "val", "test", "drift"]
+
+# ---------------------------------------------------------------------------
+# Évaluation : coût métier
+# ---------------------------------------------------------------------------
+# Coût d'une fausse alerte (investigation manuelle + friction client), en unités
+# monétaires du jeu de données. Hypothèse : ~3 % du montant médian d'une
+# transaction TRANSFER/CASH_OUT (~175 000). Une analyse de sensibilité sera
+# menée lors du choix du seuil.
+COST_FALSE_POSITIVE = 5_000
+
+RESULTS_DIR = REPORTS_DIR / "results"
