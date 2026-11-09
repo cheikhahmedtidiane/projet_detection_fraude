@@ -62,7 +62,7 @@ pytest
 - [x] Cadrage du problème et hypothèses → [reports/01_cadrage.md](reports/01_cadrage.md)
 - [x] Chargement et qualité des données → [notebooks/01_chargement_qualite.ipynb](notebooks/01_chargement_qualite.ipynb)
 - [x] Analyse exploratoire et tests statistiques → [notebooks/02_eda_hypotheses.ipynb](notebooks/02_eda_hypotheses.ipynb)
-- [ ] Protocole expérimental (split temporel)
+- [x] Protocole expérimental (split temporel) → [notebooks/03_protocole_experimental.ipynb](notebooks/03_protocole_experimental.ipynb)
 - [ ] Feature engineering
 - [ ] Modèles de référence
 - [ ] Modélisation avancée et gestion du déséquilibre
