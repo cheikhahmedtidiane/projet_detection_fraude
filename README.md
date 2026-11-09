@@ -53,7 +53,7 @@ pip install -r requirements.txt
 ## Feuille de route
 
 - [x] Initialisation du projet
-- [ ] Cadrage du problème et hypothèses
+- [x] Cadrage du problème et hypothèses → [reports/01_cadrage.md](reports/01_cadrage.md)
 - [ ] Chargement et qualité des données
 - [ ] Analyse exploratoire et tests statistiques
 - [ ] Protocole expérimental (split temporel)
