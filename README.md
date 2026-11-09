@@ -64,7 +64,7 @@ pytest
 - [x] Analyse exploratoire et tests statistiques → [notebooks/02_eda_hypotheses.ipynb](notebooks/02_eda_hypotheses.ipynb)
 - [x] Protocole expérimental (split temporel) → [notebooks/03_protocole_experimental.ipynb](notebooks/03_protocole_experimental.ipynb)
 - [x] Feature engineering → [notebooks/04_feature_engineering.ipynb](notebooks/04_feature_engineering.ipynb)
-- [ ] Modèles de référence
+- [x] Modèles de référence → [notebooks/05_baselines.ipynb](notebooks/05_baselines.ipynb)
 - [ ] Modélisation avancée et gestion du déséquilibre
 - [ ] Évaluation finale et optimisation du seuil
 - [ ] Explicabilité (SHAP)
