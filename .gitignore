@@ -1,0 +1,30 @@
+# ---- Données (trop volumineuses, non versionnées) ----
+data/raw/*
+data/processed/*
+!data/raw/.gitkeep
+!data/processed/.gitkeep
+
+# ---- Modèles entraînés ----
+models/*
+!models/.gitkeep
+
+# ---- Environnement Python ----
+.venv/
+venv/
+env/
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.ipynb_checkpoints/
+
+# ---- IDE / OS ----
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# ---- Divers ----
+*.log
+.env
