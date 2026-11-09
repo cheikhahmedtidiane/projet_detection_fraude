@@ -31,3 +31,16 @@ RULE_FLAG = "isFlaggedFraud"
 TIME_COL = "step"
 
 TRANSACTION_TYPES = ["CASH_IN", "CASH_OUT", "DEBIT", "PAYMENT", "TRANSFER"]
+# Seuls types contenant de la fraude (validé en EDA, hypothèse H1)
+FRAUD_TYPES = ["TRANSFER", "CASH_OUT"]
+
+# ---------------------------------------------------------------------------
+# Protocole expérimental : découpage temporel (en jours, bornes incluses)
+# ---------------------------------------------------------------------------
+# Jour = step // 24. Voir notebooks/03_protocole_experimental.ipynb.
+SPLITS_DIR = PROCESSED_DIR / "splits"
+TRAIN_LAST_DAY = 12  # train : jours 0 à 12
+VAL_LAST_DAY = 14  # validation : jours 13 à 14
+TEST_LAST_DAY = 16  # test : jours 15 à 16
+# drift : jours 17 et suivants (régime d'activité anormal du simulateur)
+SPLIT_NAMES = ["train", "val", "test", "drift"]
