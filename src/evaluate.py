@@ -126,6 +126,65 @@ def compare_models(
     return pd.DataFrame(rows).T
 
 
+def bootstrap_pr_auc(
+    y_true: np.ndarray,
+    scores: dict[str, np.ndarray],
+    reference: str | None = None,
+    n_boot: int = 300,
+    alpha: float = 0.05,
+    random_state: int = 42,
+) -> pd.DataFrame:
+    """Intervalles de confiance bootstrap de la PR-AUC, appariés entre modèles.
+
+    Les mêmes rééchantillonnages (tirage avec remise des transactions) sont
+    utilisés pour tous les modèles : les écarts entre modèles sont donc
+    **appariés**, ce qui donne des comparaisons bien plus précises que deux
+    intervalles calculés séparément.
+
+    Limite : le bootstrap simple suppose des observations indépendantes ; il
+    ignore la dépendance temporelle entre transactions proches.
+
+    Args:
+        y_true: vraie classe.
+        scores: {nom du modèle: scores}.
+        reference: modèle de référence ; si fourni, on ajoute l'intervalle de
+            l'écart ``PR-AUC(modèle) - PR-AUC(référence)`` et la part des
+            rééchantillonnages où le modèle fait mieux.
+        n_boot: nombre de rééchantillonnages.
+        alpha: 1 - niveau de confiance.
+
+    Returns:
+        DataFrame indexé par modèle : PR-AUC observée, bornes de l'intervalle
+        et, le cas échéant, statistiques de l'écart à la référence.
+    """
+    y_true = np.asarray(y_true).astype(int)
+    rng = np.random.default_rng(random_state)
+    n = len(y_true)
+    boot = {name: np.empty(n_boot) for name in scores}
+    for b in range(n_boot):
+        idx = rng.integers(0, n, n)
+        y_b = y_true[idx]
+        for name, s in scores.items():
+            boot[name][b] = average_precision_score(y_b, np.asarray(s)[idx])
+
+    lo, hi = 100 * alpha / 2, 100 * (1 - alpha / 2)
+    rows = {}
+    for name, s in scores.items():
+        row = {
+            "pr_auc": float(average_precision_score(y_true, s)),
+            "ic_bas": float(np.percentile(boot[name], lo)),
+            "ic_haut": float(np.percentile(boot[name], hi)),
+        }
+        if reference is not None:
+            diff = boot[name] - boot[reference]
+            row["ecart_ref"] = row["pr_auc"] - float(average_precision_score(y_true, scores[reference]))
+            row["ecart_ic_bas"] = float(np.percentile(diff, lo))
+            row["ecart_ic_haut"] = float(np.percentile(diff, hi))
+            row["p_meilleur"] = float((diff > 0).mean())
+        rows[name] = row
+    return pd.DataFrame(rows).T
+
+
 def plot_pr_curves(
     ax, scores: dict[str, np.ndarray], y_true: np.ndarray, legend_loc: str = "lower left"
 ) -> None:
