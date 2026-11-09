@@ -130,6 +130,38 @@ def odds_ratio(exposure: pd.Series, outcome: pd.Series) -> float:
     return float((a * d) / (b * c))
 
 
+def population_stability_index(
+    reference: pd.Series, current: pd.Series, n_bins: int = 10
+) -> float:
+    """Indice de stabilité de population (PSI) entre deux distributions.
+
+    Mesure à quel point la distribution d'une variable a dérivé entre un jeu de
+    référence (ex. train) et un jeu courant (ex. test). Les intervalles sont
+    définis par les quantiles de la référence.
+
+    Interprétation usuelle (secteur bancaire) :
+      * PSI < 0,1  : distribution stable ;
+      * 0,1 – 0,25 : dérive modérée, à surveiller ;
+      * PSI > 0,25 : dérive importante.
+    """
+    ref = np.asarray(reference, dtype="float64")
+    cur = np.asarray(current, dtype="float64")
+    eps = 1e-6
+
+    values = np.unique(ref)
+    if len(values) <= n_bins:
+        # Variable discrète (ex. binaire) : une modalité = un intervalle
+        values = np.union1d(values, np.unique(cur))
+        ref_pct = np.array([(ref == v).mean() for v in values]) + eps
+        cur_pct = np.array([(cur == v).mean() for v in values]) + eps
+    else:
+        edges = np.unique(np.quantile(ref, np.linspace(0, 1, n_bins + 1)))
+        edges[0], edges[-1] = -np.inf, np.inf
+        ref_pct = np.histogram(ref, bins=edges)[0] / len(ref) + eps
+        cur_pct = np.histogram(cur, bins=edges)[0] / len(cur) + eps
+    return float(np.sum((cur_pct - ref_pct) * np.log(cur_pct / ref_pct)))
+
+
 def results_table(results: dict[str, TestResult], alpha: float = 0.05) -> pd.DataFrame:
     """Met en forme plusieurs résultats avec correction de Bonferroni.
 

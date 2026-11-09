@@ -10,8 +10,30 @@ from src.stats import (
     interpret_rank_biserial,
     mann_whitney,
     odds_ratio,
+    population_stability_index,
     results_table,
 )
+
+
+def test_psi_identical_distributions_is_near_zero():
+    rng = np.random.default_rng(0)
+    a = pd.Series(rng.normal(size=20_000))
+    b = pd.Series(rng.normal(size=20_000))
+    assert population_stability_index(a, b) < 0.01
+
+
+def test_psi_shifted_distribution_is_large():
+    rng = np.random.default_rng(0)
+    a = pd.Series(rng.normal(size=20_000))
+    b = pd.Series(rng.normal(loc=1.5, size=20_000))
+    assert population_stability_index(a, b) > 0.25
+
+
+def test_psi_binary_variable():
+    ref = pd.Series([0] * 90 + [1] * 10)
+    assert population_stability_index(ref, ref) == pytest.approx(0.0, abs=1e-9)
+    shifted = pd.Series([0] * 50 + [1] * 50)
+    assert population_stability_index(ref, shifted) > 0.25
 
 
 def test_chi2_perfect_association():
