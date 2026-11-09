@@ -61,7 +61,7 @@ pytest
 - [x] Initialisation du projet
 - [x] Cadrage du problème et hypothèses → [reports/01_cadrage.md](reports/01_cadrage.md)
 - [x] Chargement et qualité des données → [notebooks/01_chargement_qualite.ipynb](notebooks/01_chargement_qualite.ipynb)
-- [ ] Analyse exploratoire et tests statistiques
+- [x] Analyse exploratoire et tests statistiques → [notebooks/02_eda_hypotheses.ipynb](notebooks/02_eda_hypotheses.ipynb)
 - [ ] Protocole expérimental (split temporel)
 - [ ] Feature engineering
 - [ ] Modèles de référence
