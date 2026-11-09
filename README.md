@@ -63,7 +63,7 @@ pytest
 - [x] Chargement et qualité des données → [notebooks/01_chargement_qualite.ipynb](notebooks/01_chargement_qualite.ipynb)
 - [x] Analyse exploratoire et tests statistiques → [notebooks/02_eda_hypotheses.ipynb](notebooks/02_eda_hypotheses.ipynb)
 - [x] Protocole expérimental (split temporel) → [notebooks/03_protocole_experimental.ipynb](notebooks/03_protocole_experimental.ipynb)
-- [ ] Feature engineering
+- [x] Feature engineering → [notebooks/04_feature_engineering.ipynb](notebooks/04_feature_engineering.ipynb)
 - [ ] Modèles de référence
 - [ ] Modélisation avancée et gestion du déséquilibre
 - [ ] Évaluation finale et optimisation du seuil
