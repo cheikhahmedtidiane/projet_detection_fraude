@@ -65,7 +65,7 @@ pytest
 - [x] Protocole expérimental (split temporel) → [notebooks/03_protocole_experimental.ipynb](notebooks/03_protocole_experimental.ipynb)
 - [x] Feature engineering → [notebooks/04_feature_engineering.ipynb](notebooks/04_feature_engineering.ipynb)
 - [x] Modèles de référence → [notebooks/05_baselines.ipynb](notebooks/05_baselines.ipynb)
-- [ ] Modélisation avancée et gestion du déséquilibre
+- [x] Modélisation avancée et gestion du déséquilibre → [notebooks/06_modelisation_avancee.ipynb](notebooks/06_modelisation_avancee.ipynb)
 - [ ] Évaluation finale et optimisation du seuil
 - [ ] Explicabilité (SHAP)
 - [ ] Pipeline d'entraînement
