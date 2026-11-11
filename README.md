@@ -56,6 +56,23 @@ Lancer les tests :
 pytest
 ```
 
+## Entraîner les modèles
+
+Une seule commande reproduit l'entraînement des modèles retenus (données → découpage temporel → entraînement → seuil optimal sur la validation → sauvegarde), en ~30 secondes :
+
+```bash
+python -m src.train
+```
+
+Options utiles :
+
+```bash
+python -m src.train --models lightgbm_transaction   # un seul modèle
+python -m src.train --cost-fp 2000                  # autre coût de fausse alerte pour le seuil
+```
+
+Chaque modèle est sauvegardé dans `models/` avec un fichier de métadonnées JSON (réglages, seuil, métriques de validation, versions des bibliothèques).
+
 ## Feuille de route
 
 - [x] Initialisation du projet
@@ -68,7 +85,7 @@ pytest
 - [x] Modélisation avancée et gestion du déséquilibre → [notebooks/06_modelisation_avancee.ipynb](notebooks/06_modelisation_avancee.ipynb)
 - [x] Évaluation finale et optimisation du seuil → [notebooks/07_evaluation_finale.ipynb](notebooks/07_evaluation_finale.ipynb)
 - [x] Explicabilité (SHAP) → [notebooks/08_explicabilite.ipynb](notebooks/08_explicabilite.ipynb)
-- [ ] Pipeline d'entraînement
+- [x] Pipeline d'entraînement → [src/train.py](src/train.py)
 - [ ] Démo Streamlit
 - [ ] Rapport final
 
