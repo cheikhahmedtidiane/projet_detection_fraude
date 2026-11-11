@@ -126,6 +126,73 @@ def compare_models(
     return pd.DataFrame(rows).T
 
 
+def cost_curve(
+    y_true: np.ndarray,
+    y_score: np.ndarray,
+    amounts: np.ndarray,
+    cost_fp: float = COST_FALSE_POSITIVE,
+) -> pd.DataFrame:
+    """Coût métier pour **tous** les seuils possibles, en une seule passe.
+
+    Les transactions sont triées par score décroissant : fixer un seuil revient
+    à alerter sur les ``k`` premières. Les sommes cumulées donnent, pour chaque
+    ``k``, le nombre de fausses alertes et le montant des fraudes ratées, sans
+    réévaluer le modèle seuil par seuil (complexité O(n log n)).
+
+    Returns:
+        Un seuil candidat par ligne (chaque valeur distincte du score), avec
+        ``n_alertes``, ``vp``, ``fp``, ``rappel``, ``precision``,
+        ``cout_fraudes_ratees``, ``cout_fausses_alertes`` et ``cout_total``.
+        Une première ligne « aucune alerte » (seuil = +inf) est incluse.
+    """
+    y_true = np.asarray(y_true).astype(int)
+    y_score = np.asarray(y_score, dtype="float64")
+    amounts = np.asarray(amounts, dtype="float64")
+
+    order = np.argsort(-y_score, kind="mergesort")
+    s, y, a = y_score[order], y_true[order], amounts[order]
+    tp = np.cumsum(y)
+    fp = np.cumsum(1 - y)
+    caught = np.cumsum(a * y)
+    # Ne garder que le dernier indice de chaque valeur de score (seuil = score)
+    last = np.r_[np.flatnonzero(np.diff(s) != 0), len(s) - 1]
+
+    total_fraud_amount = a[y == 1].sum()
+    n_pos = max(int(y.sum()), 1)
+    tp, fp, caught = np.r_[0, tp[last]], np.r_[0, fp[last]], np.r_[0.0, caught[last]]
+    n_alerts = tp + fp
+    # max(., 0) : supprime les écarts d'arrondi (-1e-9) quand tout est détecté
+    missed = np.maximum(total_fraud_amount - caught, 0.0)
+    curve = pd.DataFrame(
+        {
+            "seuil": np.r_[np.inf, s[last]],
+            "n_alertes": n_alerts,
+            "vp": tp,
+            "fp": fp,
+            "rappel": tp / n_pos,
+            "precision": np.divide(tp, n_alerts, out=np.zeros(len(tp)), where=n_alerts > 0),
+            "cout_fraudes_ratees": missed,
+            "cout_fausses_alertes": fp * cost_fp,
+        }
+    )
+    curve["cout_total"] = curve["cout_fraudes_ratees"] + curve["cout_fausses_alertes"]
+    return curve
+
+
+def optimal_threshold(
+    y_true: np.ndarray,
+    y_score: np.ndarray,
+    amounts: np.ndarray,
+    cost_fp: float = COST_FALSE_POSITIVE,
+) -> float:
+    """Seuil qui minimise le coût métier total (fraude si score >= seuil).
+
+    À choisir sur la **validation**, jamais sur le test.
+    """
+    curve = cost_curve(y_true, y_score, amounts, cost_fp)
+    return float(curve.loc[curve["cout_total"].idxmin(), "seuil"])
+
+
 def bootstrap_pr_auc(
     y_true: np.ndarray,
     scores: dict[str, np.ndarray],
@@ -186,11 +253,19 @@ def bootstrap_pr_auc(
 
 
 def plot_pr_curves(
-    ax, scores: dict[str, np.ndarray], y_true: np.ndarray, legend_loc: str = "lower left"
+    ax,
+    scores: dict[str, np.ndarray],
+    y_true: np.ndarray,
+    legend_loc: str = "lower left",
+    colors: list[str] | None = None,
 ) -> None:
-    """Trace les courbes précision-rappel de plusieurs modèles sur un même axe."""
+    """Trace les courbes précision-rappel de plusieurs modèles sur un même axe.
+
+    ``colors`` permet de garder la même couleur pour un modèle d'un graphique
+    à l'autre (par défaut : :data:`MODEL_COLORS` dans l'ordre).
+    """
     y_true = np.asarray(y_true)
-    for color, (name, s) in zip(MODEL_COLORS, scores.items()):
+    for color, (name, s) in zip(colors or MODEL_COLORS, scores.items()):
         precision, recall, _ = precision_recall_curve(y_true, s)
         ap = average_precision_score(y_true, s)
         ax.step(recall, precision, where="post", color=color, linewidth=2,

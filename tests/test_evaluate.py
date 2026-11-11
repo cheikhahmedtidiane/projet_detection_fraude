@@ -5,7 +5,14 @@ import pandas as pd
 import pytest
 
 from src.baselines import RegleCompteVide, RegleIsFlagged, make_logistic_regression
-from src.evaluate import business_cost, compare_models, compute_metrics, save_results
+from src.evaluate import (
+    business_cost,
+    compare_models,
+    compute_metrics,
+    cost_curve,
+    optimal_threshold,
+    save_results,
+)
 
 
 # ---------------------------------------------------------------- évaluation
@@ -97,3 +104,29 @@ def test_logistic_regression_learns(raw):
     model = make_logistic_regression("complet").fit(raw, raw["isFraud"])
     proba = model.predict_proba(raw)[:, 1]
     assert compute_metrics(raw["isFraud"], proba)["roc_auc"] > 0.9
+
+
+# ---------------------------------------------------------------- seuil métier
+def test_cost_curve_matches_compute_metrics():
+    rng = np.random.default_rng(3)
+    y = (rng.random(500) < 0.1).astype(int)
+    score = np.round(y * 0.4 + rng.random(500), 2)  # avec ex aequo
+    amounts = rng.uniform(10, 1000, 500)
+    curve = cost_curve(y, score, amounts, cost_fp=50)
+    assert np.isinf(curve["seuil"].iloc[0]) and curve["n_alertes"].iloc[0] == 0
+    for _, row in curve.sample(20, random_state=0).iterrows():
+        m = compute_metrics(y, score, threshold=row["seuil"], amounts=amounts, cost_fp=50)
+        assert row["fp"] == m["fp"] and row["vp"] == m["vp"]
+        assert row["cout_total"] == pytest.approx(m["cout_total"])
+
+
+def test_optimal_threshold_depends_on_alert_cost():
+    y = np.array([1, 0, 1, 0, 0])
+    score = np.array([0.9, 0.8, 0.7, 0.2, 0.1])
+    amounts = np.array([100.0, 1.0, 100.0, 1.0, 1.0])
+    # Fausse alerte bon marché : on accepte 1 FP pour attraper les 2 fraudes
+    assert optimal_threshold(y, score, amounts, cost_fp=10) == 0.7
+    # Fausse alerte plus chère qu'une fraude : on n'alerte que sur la plus sûre
+    assert optimal_threshold(y, score, amounts, cost_fp=1000) == 0.9
+    # Fraudes de montant négligeable : ne rien signaler est optimal
+    assert np.isinf(optimal_threshold(y, np.array([0.1, 0.9, 0.2, 0.8, 0.7]), amounts, cost_fp=1000))
