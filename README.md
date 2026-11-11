@@ -66,7 +66,7 @@ pytest
 - [x] Feature engineering → [notebooks/04_feature_engineering.ipynb](notebooks/04_feature_engineering.ipynb)
 - [x] Modèles de référence → [notebooks/05_baselines.ipynb](notebooks/05_baselines.ipynb)
 - [x] Modélisation avancée et gestion du déséquilibre → [notebooks/06_modelisation_avancee.ipynb](notebooks/06_modelisation_avancee.ipynb)
-- [ ] Évaluation finale et optimisation du seuil
+- [x] Évaluation finale et optimisation du seuil → [notebooks/07_evaluation_finale.ipynb](notebooks/07_evaluation_finale.ipynb)
 - [ ] Explicabilité (SHAP)
 - [ ] Pipeline d'entraînement
 - [ ] Démo Streamlit
