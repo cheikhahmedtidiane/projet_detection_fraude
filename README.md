@@ -67,7 +67,7 @@ pytest
 - [x] Modèles de référence → [notebooks/05_baselines.ipynb](notebooks/05_baselines.ipynb)
 - [x] Modélisation avancée et gestion du déséquilibre → [notebooks/06_modelisation_avancee.ipynb](notebooks/06_modelisation_avancee.ipynb)
 - [x] Évaluation finale et optimisation du seuil → [notebooks/07_evaluation_finale.ipynb](notebooks/07_evaluation_finale.ipynb)
-- [ ] Explicabilité (SHAP)
+- [x] Explicabilité (SHAP) → [notebooks/08_explicabilite.ipynb](notebooks/08_explicabilite.ipynb)
 - [ ] Pipeline d'entraînement
 - [ ] Démo Streamlit
 - [ ] Rapport final
