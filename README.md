@@ -56,6 +56,12 @@ Lancer les tests :
 pytest
 ```
 
+> **Environnement virtuel** : les commandes de ce README (`pytest`, `python -m src.train`, `streamlit run …`) supposent que l'environnement `.venv` est **activé** (l'invite du terminal commence alors par `(.venv)`). Sinon, le terminal répond par exemple *« Le terme "streamlit" n'est pas reconnu »*. Deux solutions :
+> - activer l'environnement dans chaque nouveau terminal : `.venv\Scripts\activate` ;
+> - ou appeler directement son Python, sans activation : `.venv\Scripts\python -m pytest`, `.venv\Scripts\python -m src.train`, `.venv\Scripts\python -m streamlit run app/streamlit_app.py` (Linux/Mac : `.venv/bin/python …`).
+>
+> Sous PowerShell, si l'activation est refusée (« l'exécution de scripts est désactivée »), autorisez les scripts locaux pour votre utilisateur : `Set-ExecutionPolicy -Scope CurrentUser RemoteSigned`.
+
 ## Entraîner les modèles
 
 Une seule commande reproduit l'entraînement des modèles retenus (données → découpage temporel → entraînement → seuil optimal sur la validation → sauvegarde), en ~30 secondes :
@@ -81,7 +87,13 @@ Après l'entraînement des modèles :
 streamlit run app/streamlit_app.py
 ```
 
-La démo comporte trois pages :
+Sans activer l'environnement virtuel :
+
+```bash
+.venv\Scripts\python -m streamlit run app/streamlit_app.py
+```
+
+La démo s'ouvre dans le navigateur à l'adresse http://localhost:8501. Elle comporte trois pages :
 - **Analyser une transaction** : score de fraude, décision au seuil retenu et explication SHAP variable par variable ;
 - **Simuler une période** : rejouer une journée réelle de validation ou de test et voir l'effet du coût d'une fausse alerte sur les alertes et le coût total ;
 - **À propos du modèle** : performances sur le test, ce que le modèle a appris, et limites liées au simulateur.
