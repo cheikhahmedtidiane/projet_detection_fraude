@@ -28,3 +28,6 @@ desktop.ini
 # ---- Divers ----
 *.log
 .env
+
+# ---- Outils locaux ----
+.claude/

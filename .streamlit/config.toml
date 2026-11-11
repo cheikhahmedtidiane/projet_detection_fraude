@@ -1,0 +1,6 @@
+# Thème de la démo : couleur principale = bleu du projet (orange réservé à « fraude »)
+[theme]
+primaryColor = "#2a78d6"
+
+[browser]
+gatherUsageStats = false

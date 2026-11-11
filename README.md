@@ -73,6 +73,19 @@ python -m src.train --cost-fp 2000                  # autre coût de fausse aler
 
 Chaque modèle est sauvegardé dans `models/` avec un fichier de métadonnées JSON (réglages, seuil, métriques de validation, versions des bibliothèques).
 
+## Lancer la démo
+
+Après l'entraînement des modèles :
+
+```bash
+streamlit run app/streamlit_app.py
+```
+
+La démo comporte trois pages :
+- **Analyser une transaction** : score de fraude, décision au seuil retenu et explication SHAP variable par variable ;
+- **Simuler une période** : rejouer une journée réelle de validation ou de test et voir l'effet du coût d'une fausse alerte sur les alertes et le coût total ;
+- **À propos du modèle** : performances sur le test, ce que le modèle a appris, et limites liées au simulateur.
+
 ## Feuille de route
 
 - [x] Initialisation du projet
@@ -86,7 +99,7 @@ Chaque modèle est sauvegardé dans `models/` avec un fichier de métadonnées J
 - [x] Évaluation finale et optimisation du seuil → [notebooks/07_evaluation_finale.ipynb](notebooks/07_evaluation_finale.ipynb)
 - [x] Explicabilité (SHAP) → [notebooks/08_explicabilite.ipynb](notebooks/08_explicabilite.ipynb)
 - [x] Pipeline d'entraînement → [src/train.py](src/train.py)
-- [ ] Démo Streamlit
+- [x] Démo Streamlit → [app/streamlit_app.py](app/streamlit_app.py)
 - [ ] Rapport final
 
 ## Auteur
